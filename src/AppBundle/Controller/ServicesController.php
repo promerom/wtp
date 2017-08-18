@@ -7,7 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
 use AppBundle\Entity\City;
-use AppBundle\Entity\Travels;
+use AppBundle\Entity\Travel;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -35,15 +35,15 @@ class ServicesController extends Controller
     }
 
     /**
-     * @Route("/save/travel", name="saveTravels")
+     * @Route("/save/travel", name="saveTravel")
      */
-    public function saveTravelsAction(Request $request)
+    public function saveTravelAction(Request $request)
     {
         // you can fetch the EntityManager via $this->getDoctrine()
         // or you can add an argument to your action: createAction(EntityManagerInterface $em)
         $em = $this->getDoctrine()->getManager();
 
-        $travel = new Travels();
+        $travel = new Travel();
         $travel->setCity1($this->showInfo(City::class, 1));
         $travel->setCity2(3);
         $travel->setCost(5);
@@ -71,7 +71,7 @@ class ServicesController extends Controller
         if ($slug == "city") {
             $item = $this->showInfo(City::class, $id);
         } else if ($slug == "travel") {
-            $item = $this->showInfo(Travels::class, $id);
+            $item = $this->showInfo(Travel::class, $id);
         }
 
         if (!$item) {

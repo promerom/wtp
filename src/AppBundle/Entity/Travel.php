@@ -5,12 +5,12 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Travels
+ * Travel
  *
- * @ORM\Table(name="travels")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\TravelsRepository")
+ * @ORM\Table(name="travel")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\TravelRepository")
  */
-class Travels
+class Travel
 {
     /**
      * @var int
@@ -22,7 +22,7 @@ class Travels
     private $id;
 
     /**
-     * @var int
+     * @var src\AppBundle\Entity\City
      *
      * @ORM\ManyToOne(targetEntity="City")
      * @ORM\JoinColumn(name="city1_id", referencedColumnName="id", nullable=false)
@@ -30,7 +30,7 @@ class Travels
     private $city1;
 
     /**
-     * @var int
+     * @var src\AppBundle\Entity\City
      *
      * @ORM\ManyToOne(targetEntity="City")
      * @ORM\JoinColumn(name="city2_id", referencedColumnName="id", nullable=false)
@@ -58,9 +58,9 @@ class Travels
     /**
      * Set city1
      *
-     * @param integer $city1
+     * @param City $city1
      *
-     * @return Travels
+     * @return Travel
      */
     public function setCity1($city1)
     {
@@ -82,9 +82,9 @@ class Travels
     /**
      * Set city2
      *
-     * @param integer $city2
+     * @param City $city2
      *
-     * @return Travels
+     * @return Travel
      */
     public function setCity2($city2)
     {
@@ -108,7 +108,7 @@ class Travels
      *
      * @param integer $cost
      *
-     * @return Travels
+     * @return Travel
      */
     public function setCost($cost)
     {

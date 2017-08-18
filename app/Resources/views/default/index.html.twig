@@ -5,5 +5,67 @@
     <div class="starter-template">
         <h1>Insert the cities and the cost to travel from one city to other city</h1>
     </div>
+    <div class="add-cities col-sm-6">
+    	{{ render(controller(
+    		'AppBundle:City:new'
+    	)) }}
+    </div>
+    <div class="add-travels col-sm-6">
+    	{{ render(controller(
+    		'AppBundle:Travel:new'
+    	)) }}
+    </div>
+    <div class="cities-list col-sm-6">
+    	{{ render(controller(
+    		'AppBundle:City:index'
+    	)) }}
+    </div>
+    <div class="travels-list col-sm-6">
+    	{{ render(controller(
+    		'AppBundle:Travel:index'
+    	)) }}
+    </div>
 </div><!-- /.container -->
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script type="text/javascript">
+    $(document).ready(function() {
+	    $('form[name=appbundle_city]').submit(function() {
+	        $theForm = $(this);
+
+	        // send xhr request
+	        $.ajax({
+	            type: $theForm.attr('method'),
+	            url: $theForm.attr('action'),
+	            data: $theForm.serialize()
+	        }).done(function(data) {
+	        	console.log('Yay! Form sent. ' + data);
+	        }).fail(function(data) {
+	        	console.log('Error city ' + data);
+	        });
+
+	        // prevent submitting again
+	        return false;
+	    });
+
+	    $('form[name=appbundle_travel]').submit(function() {
+	        $theForm = $(this);
+
+	        // send xhr request
+	        $.ajax({
+	            type: $theForm.attr('method'),
+	            url: $theForm.attr('action'),
+	            data: $theForm.serialize(),
+	            success: function(data) {
+	                
+	            }
+	        });
+
+	        // prevent submitting again
+	        return false;
+	    })
+    });
+    </script>
 {% endblock %}
