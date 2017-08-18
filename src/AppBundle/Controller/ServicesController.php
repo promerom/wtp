@@ -69,25 +69,18 @@ class ServicesController extends Controller
     public function showAction(Request $request, $slug, $id)
     {
         if ($slug == "city") {
-            $city = $this->showInfo(City::class, $id);
-
-            if (!$city) {
-                throw $this->createNotFoundException(
-                    'No city found for id '.$id
-                );
-            }
+            $item = $this->showInfo(City::class, $id);
         } else if ($slug == "travel") {
-            $travel = $this->showInfo("Travels::class", $id);
-            $travel = $this->getDoctrine()->getRepository(Travels::class)->find($id);
-
-            if (!$travel) {
-                throw $this->createNotFoundException(
-                    'No travel found for id '.$id
-                );
-            }
+            $item = $this->showInfo(Travels::class, $id);
         }
 
-        return new Response("Item found " . $city->getName());
+        if (!$item) {
+            throw $this->createNotFoundException(
+                'No ' . $slug . ' found for id ' . $id
+            );
+        }
+
+        return new Response("Item found " . $item->getName());
     }
 
     private function showInfo($entity, $id)
