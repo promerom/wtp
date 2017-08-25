@@ -1,0 +1,11 @@
+
+<h2>List of cities that denotes the user itinerary </h2>
+<h3>
+{% for city in path %}
+    {{ city }} 
+    {% if not loop.last %}
+    	,
+    {% endif %}
+{% endfor %}
+</h3>
+<h2>Total cost of the trip would be {{ cost }}</h2>

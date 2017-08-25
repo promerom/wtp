@@ -37,6 +37,7 @@ class WorldTravellerProblem {
 		$accPath[0]["points"][0] = $roads[0][1];
 		$accPath[0]["points"][1] = $roads[0][2];
 
+		$j=1;
 		for ($i=1; $i<count($roads); $i++) {
 			$value = $roads[$i];
 			$cost = $value[0];
@@ -44,13 +45,26 @@ class WorldTravellerProblem {
 			$city2 = $value[2];
 
 			if (!$this->searchCity1($city2, $accPath) && !$this->searchCity1($city1, $accPath)) {
-				$accPath[$i]["cost"] = $cost;
-				$accPath[$i]["points"][0] = $city1;
-				$accPath[$i]["points"][1] = $city2;
+				$accPath[$j]["cost"] = $cost;
+				$accPath[$j]["points"][0] = $city1;
+				$accPath[$j]["points"][1] = $city2;
+				$j++;
 			}
 		}
 
-		return $accPath;
+		$road["road"][0] = $accPath[0]["points"][0];
+		$road["road"][1] = $accPath[0]["points"][1];
+
+		for ($x = 1; $x < count($accPath); $x++) {
+			if ($road["road"][$x] == $accPath[$x]["points"][0]) {
+				$road["road"][$x+1] = $accPath[$x]["points"][1];
+			} else {
+				$road["road"][$x+1] = $accPath[$x]["points"][0];
+			}
+		}
+
+		$road["cost"] = $this->accCost($accPath);
+		return $road;
 	}
 
 	public function searchCity($id, $array) {

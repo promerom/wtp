@@ -43,7 +43,13 @@ class ServicesController extends Controller
         $wtp = new WorldTravellerProblem($points);
         $path = $wtp->wtp();
 
-        $cost = $wtp->accCost($path);
-        return new Response("Travels list " . json_encode($path) . " Cost " . $cost);
+        $cost = $path["cost"];
+        
+        return $this->render('services/calculate.html.twig', array(
+            'path' => $path["road"],
+            'cost' => $cost
+        ));
+
+        //return new Response("List of cities that denotes the user itinerary " . json_encode($path) . " </br> Total cost of the trip would be " . $cost);
     }
 }
