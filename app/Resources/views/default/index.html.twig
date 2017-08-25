@@ -5,25 +5,31 @@
     <div class="starter-template">
         <h1>Insert the cities and the cost to travel from one city to other city</h1>
     </div>
-    <div class="add-cities col-sm-6">
+    <div class="add-cities col-lg-6">
     	{{ render(controller(
     		'AppBundle:City:new'
     	)) }}
     </div>
-    <div class="add-travels col-sm-6">
+    <div class="add-travels col-lg-6" id="add_travels">
     	{{ render(controller(
     		'AppBundle:Travel:new'
     	)) }}
     </div>
-    <div class="cities-list col-sm-6">
+    <div class="cities-list col-lg-6" id="cities_list">
     	{{ render(controller(
     		'AppBundle:City:index'
     	)) }}
     </div>
-    <div class="travels-list col-sm-6">
+    <div class="travels-list col-lg-6" id="travels_list">
     	{{ render(controller(
     		'AppBundle:Travel:index'
     	)) }}
+    </div>
+    <div class="calculate col-lg-12">
+    	<button type="button" value="calculate" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> processing" class="btn btn-default btn-block">Calculate</button>
+    	<div class="col-lg-12">
+    		<h2 id="answer"></h2>
+    	</div>
     </div>
 </div><!-- /.container -->
 {% endblock %}
@@ -32,40 +38,86 @@
 	{{ parent() }}
 	<script type="text/javascript">
     $(document).ready(function() {
+
 	    $('form[name=appbundle_city]').submit(function() {
 	        $theForm = $(this);
+	        $button = $theForm.find('button');
+	        //$button.button('loading');
 
 	        // send xhr request
 	        $.ajax({
 	            type: $theForm.attr('method'),
 	            url: $theForm.attr('action'),
 	            data: $theForm.serialize()
-	        }).done(function(data) {
-	        	console.log('Yay! Form sent. ' + data);
-	        }).fail(function(data) {
+	        }).done(function(data, $button) {
+	        	console.log('Yay! Form sent. ' + data + " - " +$button);
+	        	$.get("{{ path('travel_new') }}", function(data) {
+	        		$('#add_travels').html(data);
+	        		submitTravel();
+	        	});
+	        	//$button.button('reset');
+	        }).fail(function(data, $button) {
 	        	console.log('Error city ' + data);
+	        	$button.button('reset');
 	        });
 
 	        // prevent submitting again
 	        return false;
 	    });
 
-	    $('form[name=appbundle_travel]').submit(function() {
-	        $theForm = $(this);
+	    $(".calculate").find("button").click(function(){
+	    	$this = $(this);
+	    	//$this.button("loading");
 
-	        // send xhr request
-	        $.ajax({
-	            type: $theForm.attr('method'),
-	            url: $theForm.attr('action'),
-	            data: $theForm.serialize(),
-	            success: function(data) {
-	                
-	            }
-	        });
+	    	$.ajax({
+	    		type: 'POST',
+	    		url: '{{ path("calculate") }}',
+	    	}).done(function(data, $this) {
+	    		//$this.button("reset");
+	    		$('#answer').html(data);
+	    	});
+	    	setTimeout(function() {
+		 		$this.button('reset');
+			}, 8000);
+	    });
 
-	        // prevent submitting again
-	        return false;
-	    })
+		// $('button').on('click', function() {
+		// 	var $this = $(this);
+		// 	$this.button('loading');
+		// 	setTimeout(function() {
+		// 		$this.button('reset');
+		// 	}, 8000);
+		// });
     });
+
+    function submitTravel() {
+	    $('form[name=appbundle_travel]').submit(function() {
+	            $theForm = $(this);
+	            $button = $theForm.find('button');
+	            //$button.button('loading');
+
+	            // send xhr request
+	            $.ajax({
+	                type: $theForm.attr('method'),
+	                url: $theForm.attr('action'),
+	                data: $theForm.serialize(),
+	            }).done(function(data, $button) {
+	                console.log('Yay! Form sent city. ' + data);
+	                $.get("{{ path('travel_new') }}", function(data) {
+	                    $('#add_travels').html(data);
+	                    submitTravel();
+	                });
+	                //$button.button('reset');
+	            }).fail(function(data, $button) {
+	                console.log('Error travel ' + data);
+	                $button.button('reset');
+	            });
+
+	            // prevent submitting again
+	            return false;
+	        });
+    	}
+
+    	submitTravel();
     </script>
 {% endblock %}

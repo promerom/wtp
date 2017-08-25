@@ -1,16 +1,17 @@
 {# {% extends 'base.html.twig' %} #}
 
 {# {% block body %} #}
-    <h1>City creation</h1>
+    <div class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading">
+            <h1>City creation</h1>
+        </div>
 
-    {{ form_start(form, {'action': path('city_new') }) }}
-        {{ form_widget(form) }}
-        <input type="submit" value="Create" />
-    {{ form_end(form) }}
-
-    <ul>
-        <li>
-            <a href="{{ path('city_index') }}">Back to the list</a>
-        </li>
-    </ul>
+        <div class="panel-body text-center">
+            {{ form_start(form, {'action': path('city_new'), 'attr': {'class': 'form-inline'} }) }}
+                {{ form_widget(form, {'attr': {'class': 'form-group'}}) }}
+                <button type="submit" value="Save" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Saving" class="btn btn-default">Save</button>
+            {{ form_end(form) }}
+        </div>
+    </div>
 {# {% endblock %} #}

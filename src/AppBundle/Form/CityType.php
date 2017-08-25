@@ -13,7 +13,13 @@ class CityType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name');
+        $builder->add('name', null, array(
+            'attr' => array(
+                'placeholder' => 'City name',
+                'class' => 'form-control'
+            ),
+            'label'  => false
+        ));
     }
     
     /**

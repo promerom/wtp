@@ -48,7 +48,10 @@ class TravelController extends Controller
             $em->persist($travel);
             $em->flush();
 
-            return $this->redirectToRoute('travel_show', array('id' => $travel->getId()));
+            // return $this->redirectToRoute('travel_show', array('id' => $travel->getId()));
+            return $this->json(array("response" => "travel was saved successfully"));
+        } else if ($form->isSubmitted() && !$form->isValid()) {
+            return $this->json(array((string)$form->getErrors(true)));
         }
 
         return $this->render('travel/new.html.twig', array(

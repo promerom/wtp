@@ -11,80 +11,39 @@ use AppBundle\Entity\Travel;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\ORM\EntityManagerInterface;
 
+use AppBundle\Model\WorldTravellerProblem;
+
 class ServicesController extends Controller
 {
     /**
-     * @Route("/save/city", name="saveCitites")
+     * @Route("/calculate", name="calculate")
      */
-    public function saveCitiesAction(Request $request)
+    public function calculateAction(Request $request)
     {
-        // you can fetch the EntityManager via $this->getDoctrine()
-        // or you can add an argument to your action: createAction(EntityManagerInterface $em)
-        $em = $this->getDoctrine()->getManager();
+        $travels = $this->getDoctrine()->getRepository(Travel::class)->findAll();
+        $cities = $this->getDoctrine()->getRepository(City::class)->findAll();
 
-        $city = new City();
-        $city->setName('NYC');
-
-        // tells Doctrine you want to (eventually) save the Product (no queries yet)
-        $em->persist($city);
-
-        // actually executes the queries (i.e. the INSERT query)
-        $em->flush();
-
-        return new Response('Saved new city with id '.$city->getId());
-    }
-
-    /**
-     * @Route("/save/travel", name="saveTravel")
-     */
-    public function saveTravelAction(Request $request)
-    {
-        // you can fetch the EntityManager via $this->getDoctrine()
-        // or you can add an argument to your action: createAction(EntityManagerInterface $em)
-        $em = $this->getDoctrine()->getManager();
-
-        $travel = new Travel();
-        $travel->setCity1($this->showInfo(City::class, 1));
-        $travel->setCity2(3);
-        $travel->setCost(5);
-
-        // tells Doctrine you want to (eventually) save the Product (no queries yet)
-        $em->persist($travel);
-
-        // actually executes the queries (i.e. the INSERT query)
-        $em->flush();
-
-        return new Response('Saved new travel with id '.$travel->getId());
-    }
-
-    /**
-     * @Route(
-     *      "/show/{slug}/{id}",
-     *      name="show", 
-     *      requirements={
-     *          "slug":"city|travel"
-     *      }
-     * )
-     */
-    public function showAction(Request $request, $slug, $id)
-    {
-        if ($slug == "city") {
-            $item = $this->showInfo(City::class, $id);
-        } else if ($slug == "travel") {
-            $item = $this->showInfo(Travel::class, $id);
+        foreach ($cities as $key => $value) {
+            $citiesArray[] = $value->getName();
         }
 
-        if (!$item) {
-            throw $this->createNotFoundException(
-                'No ' . $slug . ' found for id ' . $id
-            );
+        $points = array();
+
+        foreach ($travels as $key => $value) {
+            $city1 = $value->getCity1()->getName();
+            $city2 = $value->getCity2()->getName();
+            $cost = $value->getCost();
+
+            $info1 = array($cost, $city1, $city2);
+            $info2 = array($cost, $city2, $city1);
+
+            array_push($points, $info1, $info2);
         }
 
-        return new Response("Item found " . $item->getName());
-    }
+        $wtp = new WorldTravellerProblem($points);
+        $path = $wtp->wtp();
 
-    private function showInfo($entity, $id)
-    {
-        return $this->getDoctrine()->getRepository($entity)->find($id);
+        $cost = $wtp->accCost($path);
+        return new Response("Travels list " . json_encode($path) . " Cost " . $cost);
     }
 }

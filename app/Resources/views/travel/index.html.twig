@@ -1,39 +1,44 @@
-{% extends 'base.html.twig' %}
+{# {% extends 'base.html.twig' %}
 
-{% block body %}
-    <h1>Travels list</h1>
+{% block body %} #}
+    <div class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading">
+            <h1>Travels list <small class="lead text-right"><a href="{{ path('travel_new') }}">Create a new travel</a></small></h1>
+        </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Cost</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for travel in travels %}
-            <tr>
-                <td><a href="{{ path('travel_show', { 'id': travel.id }) }}">{{ travel.id }}</a></td>
-                <td>{{ travel.cost }}</td>
-                <td>
-                    <ul>
-                        <li>
-                            <a href="{{ path('travel_show', { 'id': travel.id }) }}">show</a>
-                        </li>
-                        <li>
-                            <a href="{{ path('travel_edit', { 'id': travel.id }) }}">edit</a>
-                        </li>
-                    </ul>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <ul>
-        <li>
-            <a href="{{ path('travel_new') }}">Create a new travel</a>
-        </li>
-    </ul>
-{% endblock %}
+        <div class="table-responsive">
+            <table class="table table-bordered table-condensed">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>City1</th>
+                        <th>City2</th>
+                        <th>Cost</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for travel in travels %}
+                    <tr>
+                        <td>{{ travel.id }}</td>
+                        <td>{{ travel.city1.name }}</td>
+                        <td>{{ travel.city2.name }}</td>
+                        <td>{{ travel.cost }}</td>
+                        <td>
+                            <ul>
+                                <li>
+                                    <a href="{{ path('travel_show', { 'id': travel.id }) }}">show</a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('travel_edit', { 'id': travel.id }) }}">edit</a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{# {% endblock %} #}
