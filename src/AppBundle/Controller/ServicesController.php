@@ -40,6 +40,7 @@ class ServicesController extends Controller
             array_push($points, $info1, $info2);
         }
 
+        array_multisort($points);
         $wtp = new WorldTravellerProblem($points);
         $path = $wtp->wtp();
 
