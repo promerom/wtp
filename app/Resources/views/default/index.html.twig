@@ -44,21 +44,21 @@
 	    $('form[name=appbundle_city]').submit(function() {
 	        $theForm = $(this);
 	        $button = $theForm.find('button');
-	        //$button.button('loading');
+	        $button.button('loading');
 
 	        // send xhr request
 	        $.ajax({
 	            type: $theForm.attr('method'),
 	            url: $theForm.attr('action'),
 	            data: $theForm.serialize()
-	        }).done(function(data, $button) {
+	        }).done(function(data) {
 	        	console.log('Yay! Form sent. ' + data + " - " +$button);
 	        	$.get("{{ path('travel_new') }}", function(data) {
 	        		$('#add_travels').html(data);
 	        		submitTravel();
 	        	});
-	        	//$button.button('reset');
-	        }).fail(function(data, $button) {
+	        	$button.button('reset');
+	        }).fail(function(data) {
 	        	console.log('Error city ' + data);
 	        	$button.button('reset');
 	        });
@@ -68,50 +68,40 @@
 	    });
 
 	    $(".calculate").find("button").click(function(){
-	    	$this = $(this);
-	    	//$this.button("loading");
+	    	btn = $(this);
+	    	btn.button("loading");
 
 	    	$.ajax({
 	    		type: 'POST',
 	    		url: '{{ path("calculate") }}',
-	    	}).done(function(data, $this) {
-	    		//$this.button("reset");
+	    	}).done(function(data) {
 	    		$('#answer').toggle('slow');
 	    		$('#answer .panel-body').html(data);
+	    		btn.button('reset');
 	    	});
-	    	setTimeout(function() {
-		 		$this.button('reset');
-			}, 8000);
 	    });
 
-		// $('button').on('click', function() {
-		// 	var $this = $(this);
-		// 	$this.button('loading');
-		// 	setTimeout(function() {
-		// 		$this.button('reset');
-		// 	}, 8000);
-		// });
     });
 
     function submitTravel() {
 	    $('form[name=appbundle_travel]').submit(function() {
 	            $theForm = $(this);
 	            $button = $theForm.find('button');
-	            //$button.button('loading');
+	            $button.button('loading');
 
 	            // send xhr request
 	            $.ajax({
 	                type: $theForm.attr('method'),
 	                url: $theForm.attr('action'),
 	                data: $theForm.serialize(),
-	            }).done(function(data, $button) {
+	            }).done(function(data) {
 	                console.log('Yay! Form sent city. ' + data);
 	                $.get("{{ path('travel_new') }}", function(data) {
 	                    $('#add_travels').html(data);
 	                    submitTravel();
 	                });
-	                //$button.button('reset');
-	            }).fail(function(data, $button) {
+	                $button.button('reset');
+	            }).fail(function(data) {
 	                console.log('Error travel ' + data);
 	                $button.button('reset');
 	            });
