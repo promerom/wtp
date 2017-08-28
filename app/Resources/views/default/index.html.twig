@@ -25,11 +25,16 @@
     		'AppBundle:Travel:index'
     	)) }}
     </div>
-    <div class="calculate col-lg-12">
+    <div class="calculate col-lg-12" style="margin-bottom: 20px;">
     	<button type="button" value="calculate" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> processing" class="btn btn-default col-lg-3">Calculate</button>
 		<div class="panel panel-default col-lg-8" id="answer" style="display: none; margin-left: 10px">
 			<div class="panel-body">
-				Panel content
+				<div class="progress">
+					<div class="progress-bar progress-bar-striped active" role="progressbar"
+					aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">
+					in progress
+					</div>
+				</div>
 			</div>
 		</div>
     </div>
@@ -46,6 +51,22 @@
 	        $button = $theForm.find('button');
 	        $button.button('loading');
 
+	        $('#add_travels').html(
+	        	'<div class="progress">'+
+					'<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">'+
+					'in progress'+
+					'</div>'+
+				'</div>'
+        	);
+
+        	$('#cities_list').html(
+        		'<div class="progress">'+
+					'<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">'+
+					'in progress'+
+					'</div>'+
+				'</div>'
+        	);
+
 	        // send xhr request
 	        $.ajax({
 	            type: $theForm.attr('method'),
@@ -56,6 +77,9 @@
 	        	$.get("{{ path('travel_new') }}", function(data) {
 	        		$('#add_travels').html(data);
 	        		submitTravel();
+	        	});
+	        	$.get("{{ path('city_index') }}", function(data) {
+	        		$('#cities_list').html(data);
 	        	});
 	        	$button.button('reset');
 	        }).fail(function(data) {
@@ -71,11 +95,12 @@
 	    	btn = $(this);
 	    	btn.button("loading");
 
+	    	$('#answer').toggle('slow');
+
 	    	$.ajax({
 	    		type: 'POST',
 	    		url: '{{ path("calculate") }}',
 	    	}).done(function(data) {
-	    		$('#answer').toggle('slow');
 	    		$('#answer .panel-body').html(data);
 	    		btn.button('reset');
 	    	});
@@ -89,6 +114,14 @@
 	            $button = $theForm.find('button');
 	            $button.button('loading');
 
+	            $('#travels_list').html(
+		        	'<div class="progress">'+
+						'<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">'+
+						'in progress'+
+						'</div>'+
+					'</div>'
+	        	);
+
 	            // send xhr request
 	            $.ajax({
 	                type: $theForm.attr('method'),
@@ -96,9 +129,8 @@
 	                data: $theForm.serialize(),
 	            }).done(function(data) {
 	                console.log('Yay! Form sent city. ' + data);
-	                $.get("{{ path('travel_new') }}", function(data) {
-	                    $('#add_travels').html(data);
-	                    submitTravel();
+	                $.get("{{ path('travel_index') }}", function(data) {
+	                    $('#travels_list').html(data);
 	                });
 	                $button.button('reset');
 	            }).fail(function(data) {
