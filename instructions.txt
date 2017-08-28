@@ -1,0 +1,62 @@
+Insall instructions:
+Its a symfony project 
+
+1- Clone or download the project from the repository 
+	git clone https://github.com/promerom/wtp.git
+
+2- Create a data base with DB_NAME and the user DB_USER with all privileges
+
+3- Download libraries into de project path
+	in the project path do 
+		composer install
+		during the installation you need to enter the following data
+		database_host: ip of the data base localhost or 127.0.0.1 if the data base is a local installation
+		database_port: XXX
+		database_name: name of the database created in the step 2 DB_NAME
+		database_user: DB_USER
+		database_password: DB_USER_PASSWORD
+		the other parameters that the process ask you aren't important, you can press enter for each data
+	update the libraries
+		composer update
+
+4- Update the data base with the following command in the path of the project example: /local/www/wtp/
+	php bin/console doctrine:schema:update --force
+
+5- Create a virtual host for apache
+	#wtp
+	<VirtualHost *:80>
+	    ServerName domain
+	    ServerAlias domain
+
+	    DocumentRoot project_path/web
+	    <Directory project_path/web >
+	        AllowOverride None
+	        Require all granted
+	        Allow from All
+
+	        <IfModule mod_rewrite.c>
+	            Options -MultiViews
+	            RewriteEngine On
+	            RewriteCond %{REQUEST_FILENAME} !-f
+	            RewriteRule ^(.*)$ app.php [QSA,L]
+	        </IfModule>
+	    </Directory>
+
+	    # optionally disable the RewriteEngine for the asset directories
+	    # which will allow apache to simply reply with a 404 when files are
+	    # not found instead of passing the request into the full symfony stack
+	    <Directory project_path/web/bundles>
+	        <IfModule mod_rewrite.c>
+	            RewriteEngine Off
+	        </IfModule>
+	    </Directory>
+	    ErrorLog logs/wtp_error.log
+	    CustomLog wtp_access.log combined
+	</VirtualHost>
+	set the hosts file found in C:\WINDOWS\System32\drivers\etc on Windows and write the following line at bottom of the file
+	127.0.0.1 domain
+
+6- the project has some data for preload, this data is in datafixtures file and are the cities related in the documento example world traveller problem. If you want to set up the application with this data please exec the following command in the path of the project
+	php bin/console doctrine:fixtures:load
+
+7- run the applicatin in the browser
